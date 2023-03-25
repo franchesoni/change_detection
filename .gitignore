@@ -1,2 +1,4 @@
 demoimages/
 config.py
+lightning_logs/
+__pycache__/
