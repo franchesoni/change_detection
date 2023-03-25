@@ -116,7 +116,7 @@ def read_image(path, bands, quantiles=None):
     return img
 
 class CDDataModule(LightningDataModule):
-    def __init__(self, data_dir, bands=RGB_BANDS, batch_size=32, num_workers=16, seed=42):
+    def __init__(self, data_dir, bands=RGB_BANDS, batch_size=4, num_workers=16, seed=42):
         super().__init__()
         self.data_dir = data_dir
         self.bands = bands
@@ -130,8 +130,8 @@ class CDDataModule(LightningDataModule):
         self.train_dataset = self.get_dataset(root=self.data_dir, bands=self.bands)
 
     @staticmethod
-    def get_dataset(root, bands, transform):
-        return BaseDataset(root, bands, transform)
+    def get_dataset(root, bands):
+        return BaseDataset(root, bands)
 
     def train_dataloader(self):
         return InfiniteDataLoader(
