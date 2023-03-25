@@ -58,21 +58,3 @@ class CDModel(torch.nn.Module):
 
 
 
-
-img1 = ToTensor()(Image.open(os.path.join('demoimages', 'img_0.png')))
-img2 = ToTensor()(Image.open(os.path.join('demoimages', 'img_1.png')))
-imgbatch1 = torch.stack((img1, img2), dim=0)
-img3 = ToTensor()(Image.open(os.path.join('demoimages', 'img_2.png')))
-img4 = ToTensor()(Image.open(os.path.join('demoimages', 'img_3.png')))
-imgbatch2 = torch.stack((img3, img4), dim=0)
-
-
-
-model = CDModel()
-prediction = model(imgbatch1, imgbatch2)
-loss = torch.nn.functional.mse_loss(prediction, imgbatch2)
-# backpropagate and check that both vit_dec and vit_enc are updated
-loss.backward()
-print(model.vit_enc.cls_token.grad)
-print(model.vit_dec.pos_embed.grad)
-breakpoint()
