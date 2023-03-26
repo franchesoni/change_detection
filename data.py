@@ -82,7 +82,9 @@ class BaseDataset(Dataset):
         return self._samples
 
     def get_samples(self):
-        return [path for path in self.root.glob('*') if path.is_dir()]
+        # return [path for path in self.root.glob('*') if path.is_dir()]
+        return [path for path in self.root.glob('[0-9]*') if path.is_dir()]
+
 
     def __len__(self):
         return len(self.samples)
