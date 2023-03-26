@@ -16,7 +16,7 @@ class CDLModule(pl.LightningModule):
     img1, img2 = batch
     img2pred = self((img1, img2))
     img1pred = self((img2, img1))
-    loss = torch.nn.functional.mse_loss(img2pred, img2) + torch.nn.functional.mse_loss(img1pred, img1)
+    loss = torch.nn.functional.l1_loss(img2pred, img2) + torch.nn.functional.l1_loss(img1pred, img1)
     self.log('train_loss', loss, prog_bar=True)
     return loss
 
