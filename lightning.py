@@ -28,8 +28,8 @@ class CDLModule(pl.LightningModule):
     img2pred = self((img1, img2))
     img1pred = self((img2, img1))
     # take absolute differences
-    img2diff = torch.abs(img2pred - img2)
-    img1diff = torch.abs(img1pred - img1)
+    img2diff = torch.abs(img2pred - img2).mean(dim=1, keepdim=True)
+    img1diff = torch.abs(img1pred - img1).mean(dim=1, keepdim=True)
     # a change should be in both differences
     globaldiff = img2diff * img1diff
     return globaldiff
