@@ -1,3 +1,4 @@
+import psutil
 from pathlib import Path
 import random
 import numpy as np
@@ -8,6 +9,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from pytorch_lightning import LightningDataModule
 
+num_cpus = len(psutil.Process().cpu_affinity())
 ALL_BANDS = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B9', 'B11', 'B12']
 RGB_BANDS = ['B4', 'B3', 'B2']
 QUANTILES = {
@@ -116,7 +118,7 @@ def read_image(path, bands, quantiles=None):
     return img
 
 class CDDataModule(LightningDataModule):
-    def __init__(self, data_dir, bands=RGB_BANDS, batch_size=4, num_workers=16, seed=42):
+    def __init__(self, data_dir, bands=RGB_BANDS, batch_size=4, num_workers=num_cpus, seed=42):
         super().__init__()
         self.data_dir = data_dir
         self.bands = bands
