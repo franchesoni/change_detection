@@ -50,8 +50,8 @@ class CDModel(torch.nn.Module):
     else:
         x = self.vit_dec.blocks(x)
     x = self.vit_dec.norm(x)[:, 1:]
-    prediction = unpatchify(x, patch_size=16)  # (B, 3, 224, 224)
-    return prediction
+    pred_diff = unpatchify(x, patch_size=16)  # (B, 3, 224, 224)
+    return pred_diff + img1  # residual connection
 
 
 
