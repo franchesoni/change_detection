@@ -76,14 +76,12 @@ class BaseDataset(Dataset):
     ])
 
     distort = transforms.Compose([
-        transforms.v2.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),
-        transforms.v2.RandomChoice([
-            transforms.v2.RandomGrayscale(p=0.2),
-            transforms.v2.RandomAutocontrast(p=0.2),
-            transforms.v2.RandomSolarize(p=0.2),
-            transforms.v2.RandomPosterize(p=0.2),
-            transforms.v2.RandomEqualize(p=0.2),
-            transforms.v2.RandomInvert(p=0.2),
+        transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),
+        transforms.RandomChoice([
+            transforms.RandomGrayscale(),
+            transforms.RandomAutocontrast(),
+            transforms.RandomSolarize(0.8),
+            transforms.RandomInvert(),
         ]),
     ])
 
