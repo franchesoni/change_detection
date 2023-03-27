@@ -35,7 +35,7 @@ class CDModel(torch.nn.Module):
     with torch.no_grad():
       self.vit_enc.pos_embed = torch.nn.Parameter(torch.zeros_like(self.vit_enc.pos_embed), requires_grad=False)  # should be zero and not trained
 
-    self.vit_dec = create_model('vit_base_patch32_224', pretrained=False)
+    self.vit_dec = create_model('vit_base_patch16_224', pretrained=False)
     self.vit_dec.cls_token = None  # we'll replace it by hacking
 
   def forward(self, img1, img2):
