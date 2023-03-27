@@ -75,6 +75,18 @@ class BaseDataset(Dataset):
         transforms.ToTensor(),
     ])
 
+    distort = transforms.Compose([
+        transforms.v2.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),
+        transforms.v2.RandomChoice([
+            transforms.v2.RandomGrayscale(p=0.2),
+            transforms.v2.RandomAutocontrast(p=0.2),
+            transforms.v2.RandomSolarize(p=0.2),
+            transforms.v2.RandomPosterize(p=0.2),
+            transforms.v2.RandomEqualize(p=0.2),
+            transforms.v2.RandomInvert(p=0.2),
+        ]),
+    ])
+
     @property
     def samples(self):
         if self._samples is None:
@@ -98,6 +110,7 @@ class BaseDataset(Dataset):
         random.seed(seed) # apply this seed to img transforms
         torch.manual_seed(seed)
         img1 = self.preprocess(t1)
+        img1 = self.distort(img1)
         torch.manual_seed(seed)
         img2 = self.preprocess(t2)
 
