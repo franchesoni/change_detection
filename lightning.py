@@ -21,7 +21,10 @@ class CDLModule(pl.LightningModule):
     return loss
 
   def configure_optimizers(self):
-      return torch.optim.Adam(self.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.5)
+    return {"optimizer":optimizer, "lr_scheduler":scheduler, "monitor":"train_loss"}
+
 
   def predict_step(self, batch, batch_idx: int, dataloader_idx: int = 0):
     img1, img2 = batch
