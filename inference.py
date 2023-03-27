@@ -9,15 +9,28 @@ from config import DATA_DIR
 from data import CDDataModule
 from lightning import CDLModule
 
+def dummy_cd_method(img1, img2):
+    img2pred = img1
+    img1pred = img2
+    # take absolute differences
+    img2diff = torch.abs(img2pred - img2).mean(dim=1, keepdim=True)
+    img1diff = torch.abs(img1pred - img1).mean(dim=1, keepdim=True)
+    # a change should be in both differences
+    globaldiff = img2diff * img1diff
+    return globaldiff
+
+
+
 def vist(img, name='img'):
   img = img[0].permute(1,2,0).detach().numpy()
   Image.fromarray((img*255).astype(np.uint8).squeeze()).save(name + '.png')
 
 
-ckpt_dir = '/home/franchesoni/cdkllogs/version_2/checkpoints'
+ckpt_dir = '/home/franchesoni/cdkllogs/version_375402/checkpoints'
 shutil.rmtree('tmp', ignore_errors=True)
 shutil.copytree(ckpt_dir, 'tmp')
-ckpt_path = os.listdir('tmp')[0]
+paths = sorted(os.listdir('tmp'))
+ckpt_path = paths[0]
 model = CDLModule.load_from_checkpoint(os.path.join('tmp', ckpt_path))
 
 ###### FROM DATASET ######
@@ -30,12 +43,13 @@ for i, (img1, img2) in enumerate(dataloader):
     vist(img1, 'img1')
     vist(img2, 'img2')
     vist(model.model(img1, img2), 'pred2')
+    vist(dummy_cd_method(img1, img2), 'dummy')
     vist(output, 'diff')
     vist(output / output.max(), 'diffnorm')
     breakpoint()
 
 ##### FROM FOLDER WITH PNGs #####
-datadir = 'vegas'
+datadir = 'alw'
 imgs = sorted(os.listdir(datadir))
 # take combinations of 2 from imgs
 for i in range(len(imgs)):
@@ -49,6 +63,7 @@ for i in range(len(imgs)):
       vist(img1, 'img1')
       vist(img2, 'img2')
       vist(model.model(img1, img2), 'pred2')
+      vist(dummy_cd_method(img1, img2), 'dummy')
       vist(output, 'diff')
       vist(output / output.max(), 'diffnorm')
       breakpoint()
